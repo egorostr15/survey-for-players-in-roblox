@@ -89,6 +89,7 @@ def resalts():
     data= curser.fetchall()
     conn.close()
     return   render_template("results.html",data=data)
+init_db()
 if __name__=="__main__":
-    init_db()
+
     app.run(debug=True)
