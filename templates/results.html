@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+        <link rel="stylesheet" href="/static/style.css"/>
+    <meta charset="UTF-8">
+    <title>результаты</title>
+</head>
+<body>
+
+      <h1> результаты опроса</h1>`
+      <table>
+          <tr>
+              <th>ID</th>
+              <th>username</th>
+              <th>favourite_meal</th>
+              <th>favourite_game</th>
+              <th>games1</th>
+              <th>games2</th>
+              <th>games3</th>
+              <th>games4</th>
+              <th>roblox_games</th>
+              <th>your_device</th>
+              <th>mark</th>
+              <th>friend</th>
+
+          </tr>
+          {%for row in data %}
+          <tr>
+              <td>{{row.id}}</td>
+              <td>{{row.username}}</td>
+              <td>{{row.favourite_meal}}</td>
+              <td>{{row.favourite_game}}</td>
+              <td>{{row.games1}}</td>
+              <td>{{row.games2}}</td>
+              <td>{{row.games3}}</td>
+              <td>{{row.games4}}</td>
+              <td>{{row.roblox_games}}</td>
+              <td>{{row.your_device}}</td>
+              <td>{{row.mark}}</td>
+              <td>{{row.friend}}</td>
+
+
+
+
+          </tr>
+          {%endfor%}
+
+
+
+
+
+
+
+
+
+
+      </table>
+</body>
+</html>

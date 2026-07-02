@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="/static/style.css"/>
+    <meta charset="UTF-8">
+    <title>Спавн</title>
+</head>
+<body>
+      <h1>привет какой твой ник?</h1>
+
+<form action='/submit'method="POST">
+        <label>введите никней:</label>
+        <input type="text" name="username">
+        <button type="submit"> Подтвердить</button>
+
+</form>
+{% if error %}
+    <p>{{ error }}</p>
+{% endif %}
+</body>
+</html>
