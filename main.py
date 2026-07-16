@@ -1,8 +1,12 @@
 from flask import Flask,render_template,request,redirect,url_for
 from flask_httpauth import HTTPBasicAuth
 
-import sqlite3
+import os
+from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db= SQLAlchemy(app)
 auth = HTTPBasicAuth()
 users = {"egor_ostro15":"fgfg1234"}
 @auth.verify_password
@@ -10,25 +14,23 @@ def verify_password(username , password):
     if username in users and users[username]==password:
         return username
 
-def init_db():
-    conn=sqlite3.connect("database.db")
-    curser=conn.cursor()
-    curser.execute('''CREATE TABLE IF NOT EXISTS survey_results
-    (id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT,
-    favourite_meal TEXT, 
-    favourite_game TEXT,
-    games1 TEXT,
-    games2 TEXT,
-    games3 TEXT,
-    games4 TEXT,
-    roblox_games TEXT,
-    your_device TEXT,
-    mark TEXT,
-    friend TEXT
-    )''')
-    conn.commit()
-    conn.close()
+class Survey_Result(db.Model):
+    __tablename__ = "survey_results"
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100))
+    favourite_meal = db.Column(db.String(100))
+    favourite_game = db.Column(db.String(100))
+    games1 = db.Column(db.Text)
+    games2 = db.Column(db.Text)
+    games3 = db.Column(db.Text)
+    games4 = db.Column(db.Text)
+    roblox_games = db.Column(db.String(100))
+    your_device = db.Column(db.String(100))
+    mark = db.Column(db.String(100))
+    friend = db.Column(db.String(100))
+
+
 
 
 @app.route("/")
@@ -65,16 +67,23 @@ def survey():
 
 
 
-       
-        conn = sqlite3.connect("database.db")
-        curser = conn.cursor()
-        curser.execute(''' INSERT INTO survey_results
-        (username,favourite_meal ,  favourite_game , games1 , games2 ,games3 ,games4 ,roblox_games ,your_device ,mark ,friend )
-        VALUES(?,?,?,?,?,?,?,?,?,?,?)
-        ''', (username,favourite_meal ,  favourite_game , games1_str , games2_str ,games3_str ,games4_str ,roblox_games ,your_device,mark ,friend ))
-        conn.commit()
 
-        conn.close()
+        result= Survey_Result(username = username,
+                              favourite_meal = favourite_meal,
+                              favourite_game = favourite_game,
+                              games1 = games1_str,
+                              games2=games2_str,
+                              games3=games3_str,
+                              games4=games4_str,
+                              roblox_games =  roblox_games,
+                              your_device = your_device,
+                              mark = mark,
+                              friend = friend
+                              ) #дз
+        db.session.add(result)
+        db.session.commit()
+
+
 
         return render_template("finish.html")
     return  render_template('survey.html',username=username)
@@ -82,14 +91,9 @@ def survey():
 @app.route("/results")
 @auth.login_required
 def resalts():
-    conn = sqlite3.connect("database.db")
-    conn.row_factory = sqlite3.Row
-    curser =conn.cursor()
-    curser.execute("SELECT * FROM survey_results")
-    data= curser.fetchall()
-    conn.close()
+    data=Survey_Result.query.all()
     return   render_template("results.html",data=data)
-init_db()
+
 if __name__=="__main__":
 
     app.run(debug=True)
