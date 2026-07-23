@@ -29,7 +29,7 @@ class SurveyResult(db.Model):
     your_device = db.Column(db.String(100))
     mark = db.Column(db.String(100))
     friend = db.Column(db.String(100))
-with app.app_contcxt():
+with app.app_context():
     db.create_all()
 
 
