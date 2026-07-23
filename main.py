@@ -13,8 +13,8 @@ users = {"egor_ostro15":"fgfg1234"}
 def verify_password(username , password):
     if username in users and users[username]==password:
         return username
-
-class Survey_Result(db.Model):
+ 
+class SurveyResult(db.Model):
     __tablename__ = "survey_results"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -29,7 +29,8 @@ class Survey_Result(db.Model):
     your_device = db.Column(db.String(100))
     mark = db.Column(db.String(100))
     friend = db.Column(db.String(100))
-
+with app.app_contcxt():
+    db.create_all()
 
 
 
@@ -68,7 +69,7 @@ def survey():
 
 
 
-        result= Survey_Result(username = username,
+        result= SurveyResult(username = username,
                               favourite_meal = favourite_meal,
                               favourite_game = favourite_game,
                               games1 = games1_str,
@@ -79,7 +80,7 @@ def survey():
                               your_device = your_device,
                               mark = mark,
                               friend = friend
-                              ) #дз
+                              )
         db.session.add(result)
         db.session.commit()
 
@@ -91,7 +92,7 @@ def survey():
 @app.route("/results")
 @auth.login_required
 def resalts():
-    data=Survey_Result.query.all()
+    data=SurveyResult.query.all()
     return   render_template("results.html",data=data)
 
 if __name__=="__main__":
